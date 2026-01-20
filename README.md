@@ -1,4 +1,44 @@
 # Proiect BDNSV
+
+## Cuprins
+
+1. [Prezentare și Demo](#prezentare-si-demo)
+2. [Rulare Proiect](#rulare-proiect)
+3. [Arhitectura Sistemului](#system-architecture)
+    - [Data Persistence Layer](#data-persistence-layer)
+    - [Application & Logic Layer](#application--logic-layer)
+    - [Presentation Layer](#presentation-layer)
+4. [Tehnologii Utilizate](#tehnologii-utilizate)
+5. [Diagrama Modelului](#diagrama)
+6. [Schema Bazei de Date](#schema-bazei-de-date)
+    - [Noduri](#1-noduri-node-types)
+    - [Relații](#2-relații-relationship-types)
+    - [Constrângeri](#3-constrângeri-data-integrity-constraints)
+7. [Configurație Software & Hardware](#configurație-software--hardware)
+8. [Code Snippets & Execuție](#code-snippets--execuție)
+9. [Capturi de Ecran](#capturi-de-ecran)
+10. [Analiză Comparativă: Neo4j vs. Oracle SQL](#analiză-comparativă-neo4j-vs-oracle-sql)
+11. [Bibliografie](#bibliografie)
+
+---
+
+## Prezentare Si Demo
+
+- Prezentare: [Prezentare](./LinkedIn_Presentation.pptx)
+- Demo:  TBA
+
+## Rulare Proiect
+
+**1. Inițializare Date & AI**
+Deschideți și rulați comanda **Run All** în următoarele notebook-uri pentru a popula baza de date și a configura agentul:
+* [`LinkedInNetwork.ipynb`](./LinkedInNetwork.ipynb) – Schema și populare date.
+* [`AgentAI.ipynb`](./AgentAI.ipynb) – Configurare Agent AI.
+
+**2. Lansare Dashboard**
+Pentru a porni interfața grafică, rulați comanda:
+```bash
+streamlit run dashboard.py
+```
 ## System Architecture
 - Sistemul este proiectat pe o arhitectură modulară și stratificată, centrată pe o bază de date orientată pe grafuri (Neo4j). Aceasta integrează o interfață de vizualizare interactivă și un agent conversațional bazat pe LLM pentru interogarea datelor.
   ### Data Persistence Layer
@@ -10,21 +50,21 @@
   - Acest strat este implementat în Python 3.12 și gestionează logica de business prin două subsisteme distincte:
     1. Modulul AI & GraphRAG
        - Implementat în AgentAI.ipynb.
-       - Utilizează framework-ul LangChain pentru a orchestra interacțiunea dintre utilizator și baza de date.
-       - LLM Integration: Integrează modelele Google Gemini (via langchain-google-genai) pentru a traduce întrebările din limbaj natural în interogări Cypher complexe.
+       - Utilizează framework-ul LangChain [[6]](https://python.langchain.com/docs/introduction/) pentru a orchestra interacțiunea dintre utilizator și baza de date.
+       - LLM Integration: Integrează modelele Google Gemini (via langchain-google-genai) [[7]](https://python.langchain.com/docs/integrations/graphs/neo4j_cypher/) pentru a traduce întrebările din limbaj natural în interogări Cypher complexe.
     2. Modulul de Analiză Vizuală
         - Implementat în [dashboard.py](dashboard.py).
         - Gestionează algoritmii de traversare a grafului: Shortest Path, K-hop Neighborhood și Friends-of-Friends.
         - Folosește driverul oficial neo4j pentru execuția directă a interogărilor optimizate.
    ### Presentation Layer
-   - Interfață Web: Construită cu Streamlit, oferind controale interactive pentru parametrizarea interogărilor
-   - Vizualizare Grafică: Utilizează biblioteca PyVis pentru randarea dinamică a sub-grafurilor, permițând utilizatorului să exploreze vizual nodurile și conexiunile returnate de backend.
+   - Interfață Web: Construită cu Streamlit [[9]](https://docs.streamlit.io/), oferind controale interactive pentru parametrizarea interogărilor
+   - Vizualizare Grafică: Utilizează biblioteca PyVis [[10]](https://pyvis.readthedocs.io/en/latest/)( pentru randarea dinamică a sub-grafurilor, permițând utilizatorului să exploreze vizual nodurile și conexiunile returnate de backend.
 ## Tehnologii Utilizate
-- Databases: Neo4j, Oracle.
+- Databases: Neo4j [[1]](https://neo4j.com/docs/), Oracle [[4]](https://docs.oracle.com/en/database/oracle/oracle-database/19/index.html). 
 - Backend Language: Python 3.12.
 - Frameworks: LangChain, Streamlit.
-- AI Models: Google Gemini 2.0 Flash.
-- Drivers & Tools: neo4j (Python Driver), pandas, pyvis.
+- AI Models: Google Gemini 1.5 Flash.
+- Drivers & Tools: neo4j (Python Driver) [[3]](https://neo4j.com/docs/python-manual/current/), pandas, pyvis.
 
 ## Diagrama
 
@@ -69,20 +109,58 @@
 * **Python Version:** 3.12.
 * **Hardware Utilizat:** Procesor Intel/AMD/, 8GB RAM.
 
-##Capturi De Ecran
+## Code Snippets & Execuție
+
+1. Traversare Graf
+   - Codul utilizat pentru a găsi cel mai scurt drum între doi utilizatori în [dashboard.py](dashboard.py)
+     
+   ```python
+        MATCH (a:User {{id:$a}}), (b:User {{id:$b}})
+        MATCH p = shortestPath((a)-[:FOLLOWS*..{maxlen}]->(b))
+        RETURN p
+    ```
+2. Configurare Agent AI (Python)
+    - Inițializarea lanțului GraphCypherQAChain în [AgentAI.ipynb](AgentAI.ipynb):
+      
+    ```python
+        chain = GraphCypherQAChain.from_llm(
+        llm=llm,
+        graph=graph,
+        verbose=False,
+        allow_dangerous_requests=True,
+        validate_cypher=True
+    )
+    ```
+## Capturi De Ecran
+- Interfața Dashboard
+<img width="1826" height="825" alt="Captură de ecran 2026-01-20 155152" src="https://github.com/user-attachments/assets/27f0e9b1-246c-44ba-b628-e4a95d7a91ce" />
+
+- Răspuns Agent AI
+<img width="1218" height="640" alt="Captură de ecran 2026-01-20 153543" src="https://github.com/user-attachments/assets/45c391d4-a393-4c6d-b6f9-9699addc031e" />
+
+## Analiză Comparativă: Neo4j vs. Oracle SQL
+- Pentru a valida eficiența soluției, am comparat performanța grafului cu o implementare relațională echivalentă (Oracle SQL)
+
+| Scenariu de Testare | Metrica | Oracle SQL (Relațional) | Neo4j (Graf) | Câștigător |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Skill-sharing**<br>*(Navigare Locală)* | Timp Execuție | ~1000 ms | **78.52 ms** | **Neo4j** |
+| | Complexitate | 6 JOIN-uri | Traversare directă | |
+| **2. Mutual Friends**<br>*(Self-Join)* | Timp Execuție | ~1000 ms | **118.82 ms** | **Neo4j** |
+| | Mecanism | Nested Loops | Index-Free Adjacency | |
+| **3. Stress Test**<br>*(Agregare Masivă)* | Timp Execuție | **3 secunde** | 23 secunde | **SQL** |
+| | Volum | ~3 Milioane Rânduri | ~3 Milioane Noduri | |
+
+- Concluzie: Neo4j domină la relații, SQL domină la calcule matematice pe seturi mari.
+
 
 ## Bibliografie
-1. Baze de Date & Limbaje de Interogare
-   - [Neo4j Documentation](https://neo4j.com/docs/)
-   - [Cypher Query Language Reference](https://neo4j.com/docs/cypher-manual/current/)
-   - [Neo4j Python Driver Manual](https://neo4j.com/docs/python-manual/current/)
-   - [Oracle Database 19c Documentation](https://docs.oracle.com/en/database/oracle/oracle-database/19/index.html)
-   - [Understanding Oracle Execution Plans](https://docs.oracle.com/en/database/oracle/oracle-database/19/tgsql/generating-and-displaying-execution-plans.html)
-2. AI & Frameworks
-   - [LangChain Python Documentation](https://python.langchain.com/docs/introduction/)
-   - [LangChain-Neo4j Cypher Integration](https://python.langchain.com/docs/integrations/graphs/neo4j_cypher/)
-   - [Google AI Studio & Gemini API](https://ai.google.dev/docs)
-
-3. Interfață & Vizualizare
-   - [Streamlit Documentation](https://docs.streamlit.io/)
-   - [PyVis Documentation](https://pyvis.readthedocs.io/en/latest/)
+   1. [Neo4j Documentation](https://neo4j.com/docs/)
+   2. [Cypher Query Language Reference](https://neo4j.com/docs/cypher-manual/current/)
+   3. [Neo4j Python Driver Manual](https://neo4j.com/docs/python-manual/current/)
+   4. [Oracle Database 19c Documentation](https://docs.oracle.com/en/database/oracle/oracle-database/19/index.html)
+   5. [Understanding Oracle Execution Plans](https://docs.oracle.com/en/database/oracle/oracle-database/19/tgsql/generating-and-displaying-execution-plans.html)
+   6. [LangChain Python Documentation](https://python.langchain.com/docs/introduction/)
+   7. [LangChain-Neo4j Cypher Integration](https://python.langchain.com/docs/integrations/graphs/neo4j_cypher/)
+   8. [Google AI Studio & Gemini API](https://ai.google.dev/docs)
+   9. [Streamlit Documentation](https://docs.streamlit.io/)
+   10. [PyVis Documentation](https://pyvis.readthedocs.io/en/latest/)
