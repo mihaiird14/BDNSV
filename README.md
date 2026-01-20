@@ -24,7 +24,7 @@
 
 ## Prezentare Si Demo
 
-- Prezentare: [Prezentare](./LinkedIn_Presentation.pptx)
+- Prezentare: [Prezentare](./LinkedIn%20Graph%20Analysis%20%26%20RAG%20Agent.pptx)
 - Demo:  TBA
 
 ## Rulare Proiect
