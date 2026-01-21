@@ -9,7 +9,7 @@
     - [Application & Logic Layer](#application--logic-layer)
     - [Presentation Layer](#presentation-layer)
 4. [Tehnologii Utilizate](#tehnologii-utilizate)
-5. [Diagrama Modelului](#diagrama)
+5. [Diagrama Modelului](#diagrame)
 6. [Schema Bazei de Date](#schema-bazei-de-date)
     - [Noduri](#1-noduri-node-types)
     - [Relații](#2-relații-relationship-types)
@@ -66,7 +66,8 @@ streamlit run dashboard.py
 - AI Models: Google Gemini 1.5 Flash.
 - Drivers & Tools: neo4j (Python Driver) [[3]](https://neo4j.com/docs/python-manual/current/), pandas, pyvis.
 
-## Diagrama
+## Diagrame
+<img width="2097" height="1272" alt="BDNSV" src="https://github.com/user-attachments/assets/8fea6caf-b2f4-4a77-a5f4-cb483fc08c67" />
 
 <img width="1761" height="793" alt="bloom-visualisation (2)" src="https://github.com/user-attachments/assets/8968a25e-92cd-477c-ba60-d92d4a4c4f7a" />
 
