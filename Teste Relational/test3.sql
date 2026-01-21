@@ -13,5 +13,4 @@ CROSS JOIN USERS u5
 CROSS JOIN USERS u6
 GROUP BY u1.role;
 
--- Afi?area structurii interne de execu?ie
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);

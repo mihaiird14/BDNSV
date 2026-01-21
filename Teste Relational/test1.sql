@@ -30,5 +30,4 @@ WHERE me.user_id = 'u1'
   AND colleague.user_id <> 'u1'
   AND cert.cert_id NOT IN (SELECT cert_id FROM EARNED WHERE user_id = 'u1');
 
--- Afi?area planului de execu?ie formatat 
 SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);

@@ -1,4 +1,4 @@
--- Ștergerea tabelelor existente pentru a evita erorile la rulări repetate
+
 DROP TABLE ENGAGED_WITH CASCADE CONSTRAINTS;
 DROP TABLE AUTHORED CASCADE CONSTRAINTS;
 DROP TABLE FOLLOWS CASCADE CONSTRAINTS;
@@ -13,7 +13,6 @@ DROP TABLE UNIVERSITIES CASCADE CONSTRAINTS;
 DROP TABLE COMPANIES CASCADE CONSTRAINTS;
 DROP TABLE USERS CASCADE CONSTRAINTS;
 
--- 1. Tabele pentru Entități (Noduri)
 CREATE TABLE USERS (
     user_id VARCHAR2(10) PRIMARY KEY,
     name VARCHAR2(100) NOT NULL,
@@ -53,7 +52,6 @@ CREATE TABLE POSTS (
     post_date DATE
 );
 
--- 2. Tabele pentru Relații (Edge-uri)
 CREATE TABLE WORKS_AT (
     user_id VARCHAR2(10) REFERENCES USERS(user_id),
     company_id NUMBER REFERENCES COMPANIES(company_id),
@@ -104,11 +102,7 @@ CREATE TABLE ENGAGED_WITH (
     PRIMARY KEY (user_id, post_id, engagement_type)
 );
 
--- =============================
--- INSERARE DATE (Sincronizat cu Neo4j)
--- =============================
 
--- Inserare Utilizatori (u1-u12)
 INSERT INTO USERS VALUES ('u1', 'Ana Popa', 'Staff Engineer', 0);
 INSERT INTO USERS VALUES ('u2', 'Bogdan Ionescu', 'DevOps Lead', 1);
 INSERT INTO USERS VALUES ('u3', 'Cristi Stan', 'Security Expert', 0);
@@ -122,35 +116,31 @@ INSERT INTO USERS VALUES ('u10', 'Nina Voicu', 'Financial Analyst', 1);
 INSERT INTO USERS VALUES ('u11', 'Paul Serban', 'Developer Advocate', 0);
 INSERT INTO USERS VALUES ('u12', 'Raluca Nistor', 'CTO', 0);
 
--- Inserare Companii
+
 INSERT INTO COMPANIES (name, industry, city) VALUES ('Google', 'Tech', 'Bucharest');
 INSERT INTO COMPANIES (name, industry, city) VALUES ('UiPath', 'Automation', 'Bucharest');
 INSERT INTO COMPANIES (name, industry, city) VALUES ('Bitdefender', 'Security', 'Cluj-Napoca');
 INSERT INTO COMPANIES (name, industry, city) VALUES ('BCR', 'Finance', 'Bucharest');
 INSERT INTO COMPANIES (name, industry, city) VALUES ('Revolut', 'FinTech', 'Remote');
 
--- Inserare Universități
+
 INSERT INTO UNIVERSITIES (name, country, rank) VALUES ('Politehnica Bucuresti', 'RO', 800);
 INSERT INTO UNIVERSITIES (name, country, rank) VALUES ('Universitatea Bucuresti', 'RO', 900);
 INSERT INTO UNIVERSITIES (name, country, rank) VALUES ('UBB Cluj', 'RO', 850);
 INSERT INTO UNIVERSITIES (name, country, rank) VALUES ('ASE', 'RO', 1000);
 
--- Inserare Proiecte
+
 INSERT INTO PROJECTS (name, type) VALUES ('OpenVision AI', 'Open Source');
 INSERT INTO PROJECTS (name, type) VALUES ('LearnGraph', 'Hackathon');
 
--- Inserare Certificări
+
 INSERT INTO CERTIFICATIONS (name, issuer, difficulty) VALUES ('AWS Solutions Architect', 'Amazon', 5);
 INSERT INTO CERTIFICATIONS (name, issuer, difficulty) VALUES ('CKA (Kubernetes)', 'CNCF', 5);
 
--- Inserare Postări
+
 INSERT INTO POSTS VALUES ('p001', TO_DATE('2024-03-10', 'YYYY-MM-DD'));
 
--- =============================
--- INSERARE RELAȚII
--- =============================
 
--- STUDIED_AT
 INSERT INTO STUDIED_AT VALUES ('u1', 1, 'Master', 2015);
 INSERT INTO STUDIED_AT VALUES ('u2', 1, 'Master', 2015);
 INSERT INTO STUDIED_AT VALUES ('u5', 2, 'Bachelor', 2023);
@@ -160,7 +150,7 @@ INSERT INTO STUDIED_AT VALUES ('u4', 3, 'Bachelor', 2020);
 INSERT INTO STUDIED_AT VALUES ('u7', 4, NULL, NULL);
 INSERT INTO STUDIED_AT VALUES ('u10', 4, NULL, NULL);
 
--- WORKS_AT
+
 INSERT INTO WORKS_AT VALUES ('u1', 1, 'Lead', 1, NULL);
 INSERT INTO WORKS_AT VALUES ('u11', 1, 'Advocate', 1, NULL);
 INSERT INTO WORKS_AT VALUES ('u2', 2, 'DevOps', 1, NULL);
@@ -170,19 +160,19 @@ INSERT INTO WORKS_AT VALUES ('u10', 4, 'Analyst', 1, NULL);
 INSERT INTO WORKS_AT VALUES ('u7', 4, 'PO', 0, 2022);
 INSERT INTO WORKS_AT VALUES ('u7', 5, 'Senior PM', 1, NULL);
 
--- EARNED (Sincronizat pentru succesul Testului 1)
+
 INSERT INTO EARNED VALUES ('u1', 1, 2022);
 INSERT INTO EARNED VALUES ('u2', 1, 2023);
 INSERT INTO EARNED VALUES ('u3', 2, 2021);
-INSERT INTO EARNED VALUES ('u2', 2, 2024); -- Granting CKA to u2 for Test 1
+INSERT INTO EARNED VALUES ('u2', 2, 2024); 
 
--- CONTRIBUTED_TO
+
 INSERT INTO CONTRIBUTED_TO VALUES ('u4', 1, 150);
 INSERT INTO CONTRIBUTED_TO VALUES ('u6', 1, 80);
 INSERT INTO CONTRIBUTED_TO VALUES ('u9', 2, 5);
 INSERT INTO CONTRIBUTED_TO VALUES ('u11', 2, 500);
 
--- FOLLOWS
+
 INSERT INTO FOLLOWS VALUES ('u1', 'u2');
 INSERT INTO FOLLOWS VALUES ('u2', 'u3');
 INSERT INTO FOLLOWS VALUES ('u8', 'u2');
@@ -190,10 +180,10 @@ INSERT INTO FOLLOWS VALUES ('u12', 'u1');
 INSERT INTO FOLLOWS VALUES ('u7', 'u10');
 INSERT INTO FOLLOWS VALUES ('u4', 'u11');
 
--- AUTHORED
+
 INSERT INTO AUTHORED VALUES ('u11', 'p001');
 
--- ENGAGEMENTS
+
 INSERT INTO ENGAGED_WITH VALUES ('u1', 'p001', 'Like');
 INSERT INTO ENGAGED_WITH VALUES ('u9', 'p001', 'Comment');
 
