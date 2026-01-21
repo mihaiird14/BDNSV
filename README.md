@@ -25,7 +25,7 @@
 ## Prezentare Si Demo
 
 - Prezentare: [Prezentare](./LinkedIn%20Graph%20Analysis%20%26%20RAG%20Agent.pptx)
-- Demo:  TBA
+- Demo:  [Link către Demo](https://youtu.be/rkJNDs_DHkE)
 
 ## Rulare Proiect
 
